@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>WebSocket Chat</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #chat {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="text-center">WebSocket Chat Example</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <input id="username" class="form-control" type="text" placeholder="Username" required>
+                <button id="join-chat" class="btn btn-primary btn-block mt-2">Join Chat</button>
+                <textarea id="chat" class="form-control mt-2" cols="30" rows="10" readonly></textarea>
+                <input id="input" class="form-control mt-2" type="text" placeholder="Type your message here..."
+                    required>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        const username = document.querySelector("#username");
+        const join_btn = document.querySelector("#join-chat");
+        const textarea = document.querySelector("#chat");
+        const input = document.querySelector("#input");
+
+        join_btn.addEventListener("click", function (e) {
+            this.disabled = true;
+
+            const websocket = new WebSocket("ws://localhost:3000/websocket");
+
+            websocket.onopen = function () {
+                console.log("connection opened");
+                websocket.send(username.value);
+            }
+
+            const btn = this;
+
+            websocket.onclose = function () {
+                console.log("connection closed");
+                btn.disabled = false;
+            }
+
+            websocket.onmessage = function (e) {
+                console.log("received message: " + e.data);
+                textarea.value += e.data + "\r\n";
+            }
+
+            input.onkeydown = function (e) {
+                if (e.key == "Enter") {
+                    websocket.send(input.value);
+                    input.value = "";
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

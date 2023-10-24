@@ -1,0 +1,55 @@
+[workspace.package]
+name = "web-server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[workspace]
+members = [
+    "sse",
+    "chat",
+    "test",
+    "rust_long_polling",
+    "upload",
+    "response",
+    "extract",
+]
+[workspace.dependencies]
+sse = { path = " example-sse" }
+chat = { path = " example-chat" }
+rust_long_polling = { path = "rust_long_polling" }
+test = { path = "example-polling" }
+upload = { path = "upload" }
+response = { path = "response" }
+extract = { path = "extract" }
+
+
+serde = { version = "1", features = ["derive"] }
+axum = { version = "0.6.16", features = ["ws"] }
+tokio = { version = "1", features = ["full"] }
+serde_json = { version = "1" }
+thiserror = { version = "1" }
+futures = "0.3"
+tower = { version = "0.4", features = ["util"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tokio-stream = "0.1"
+futures-util = "0.3.28"
+ulid = { version = "0.4", features = ["uuid"] }
+chrono = { version = "0.4", features = ["serde"] }
+anyhow = "1"
+sqlx = { version = "0.7.2", features = [
+    "runtime-tokio-rustls",
+    "postgres",
+    "chrono",
+    "uuid",
+    "json",
+] }
+
+uuid = { version = "0.8", features = ["v4", "serde"] }
+rand = "0.7.3"
+headers = "0.3"
+tower-http = { version = "0.2.0", features = ["fs", "trace"] }
+http = "0.2.1"
